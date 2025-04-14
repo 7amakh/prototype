@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="bg-purple-600 text-white w-20 flex flex-col items-center py-4">
+      <div class="mb-4">
+        <img alt="User profile picture" class="rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/ISBBOlk4-sqJ5xXNHggoIaA9BA94dtWoccJJ2dEzX1c.jpg" width="40"/>
+      </div>
+      <div class="flex flex-col space-y-4">
+        <a href="index.html"><i class="fas fa-home text-xl"></i></a>
+        <a href="messages.html"><i class="fas fa-comment-dots text-xl bg-white text-purple-600 p-2 rounded-full"></i></a>
+        <a href="notifications.html"><i class="fas fa-bell text-xl"></i></a>
+        <a href="settings.html"><i class="fas fa-cog text-xl"></i></a>
+        <a href="logout.html"><i class="fas fa-sign-out-alt text-xl"></i></a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex flex-1">
+      <!-- Left Panel -->
+      <div class="w-1/3 p-4">
+        <div class="mb-4">
+          <input id="searchInput" class="w-full p-2 rounded-full border border-gray-300" placeholder="Search" type="text"/>
+        </div>
+        <div class="mb-4">
+          <h2 class="text-lg font-semibold mb-2">Groups</h2>
+          <div id="groupsList" class="bg-white p-4 rounded-lg shadow">
+            <!-- Groups will be dynamically added here -->
+          </div>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold mb-2">People</h2>
+          <div id="peopleList" class="bg-white p-4 rounded-lg shadow">
+            <!-- People will be dynamically added here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="w-2/3 p-4">
+        <div class="bg-white p-4 rounded-lg shadow mb-4">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center">
+              <img alt="Group profile picture" class="rounded-full mr-2" height="40" src="https://storage.googleapis.com/a1aa/image/udkfjo6K2JxdrcvnlPFT_iimn581BtCenZfQ7t75gzk.jpg" width="40"/>
+              <div>
+                <p class="font-semibold" id="activeGroupName">Projet</p>
+                <p class="text-sm text-gray-500" id="activeGroupStatus">Online - Last seen: 2:02pm</p>
+              </div>
+            </div>
+            <div class="flex space-x-4">
+              <i class="fas fa-phone text-xl text-gray-500"></i>
+              <i class="fas fa-video text-xl text-gray-500"></i>
+              <i class="fas fa-ellipsis-v text-xl text-gray-500"></i>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow flex-1 flex flex-col justify-between">
+          <!-- Scrollable chat messages container -->
+          <div id="chatMessages" class="flex flex-col space-y-4 mb-4 overflow-y-auto" style="max-height: 60vh;">
+            <!-- Chat messages will be dynamically added here -->
+          </div>
+          <div class="flex items-center space-x-4">
+            <input id="messageInput" class="w-full p-2 rounded-full border border-gray-300" placeholder="Type your message here..." type="text"/>
+            <i id="sendMessage" class="fas fa-paper-plane text-xl text-purple-600 cursor-pointer"></i>
+            <i class="fas fa-paperclip text-xl text-gray-500"></i>
+            <i class="fas fa-smile text-xl text-gray-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample data for groups and people
+    const groups = [
+      { name: "Projet", lastMessage: "kameltou?", lastSeen: "Today, 5:02pm" },
+      { name: "2eme ISI", lastMessage: "N9raw b3ad?", lastSeen: "Yesterday, 12:11pm" },
+      { name: "ISMAI-CONNECT", lastMessage: "Res 4dwa tadhot", lastSeen: "Wednesday, 9:12am" }
+    ];
+
+    const people = [
+      { name: "mohamed", lastMessage: "ok!", lastSeen: "Today, 9:52am" },
+      { name: "abdel elaziz", lastMessage: "hhhhhh", lastSeen: "Today, 12:11pm" },
+      { name: "ayoub", lastMessage: "how 9lib", lastSeen: "Today, 2:40pm" },
+      { name: "Mokhtar", lastMessage: "mghi hhhhh", lastSeen: "Wednesday, 7:32pm" },
+      { name: "mariam", lastMessage: "bh", lastSeen: "Wednesday, 9:12am" }
+    ];
+
+    // Sample chat messages for each person and group
+    const chatMessagesData = {
+      mohamed: [
+        { sender: "other", message: "bonjour!", time: "Today, 8:30pm" },
+        { sender: "me", message: "salem", time: "Today, 8:33pm" },
+      ],
+      abdel_elaziz: [
+        { sender: "other", message: "hhhhhh", time: "Today, 12:11pm" },
+        { sender: "me", message: "mrigl!", time: "Today, 8:58pm" },
+      ],
+      ayoub: [
+        { sender: "other", message: "how 9lib", time: "Today, 2:40pm" },
+        { sender: "me", message: "ok!", time: "Today, 2:41pm" },
+      ],
+      Mokhtar: [
+        { sender: "other", message: "mghi hhhhh", time: "Wednesday, 7:32pm" },
+        { sender: "me", message: "hahaha", time: "Wednesday, 7:33pm" },
+      ],
+      mariam: [
+        { sender: "other", message: "bh", time: "Wednesday, 9:12am" },
+        { sender: "me", message: "ok!", time: "Wednesday, 9:13am" },
+      ],
+      Projet: [
+        { sender: "other", message: "kameltou?", time: "Today, 5:02pm" },
+        { sender: "me", message: "Not yet, still working on it.", time: "Today, 5:05pm" },
+      ],
+      "2eme_ISI": [
+        { sender: "other", message: "N9raw b3ad?", time: "Yesterday, 12:11pm" },
+        { sender: "me", message: "Yes, let's do it!", time: "Yesterday, 12:15pm" },
+      ],
+      "ISMAI-CONNECT": [ // Fixed: Matches the group name in the `groups` array
+        { sender: "other", message: "Res 4dwa tadhot", time: "Wednesday, 9:12am" },
+        { sender: "me", message: "I'll check it out.", time: "Wednesday, 9:15am" },
+      ],
+    };
+
+    // Function to render groups
+    function renderGroups() {
+      const groupsList = document.getElementById('groupsList');
+      groupsList.innerHTML = groups.map(group => `
+        <div class="flex justify-between items-center mb-2 cursor-pointer" data-name="${group.name.replace(/\s+/g, '_')}">
+          <div>
+            <p class="font-semibold">${group.name}</p>
+            <p class="text-sm text-gray-500">${group.lastMessage}</p>
+          </div>
+          <p class="text-sm text-gray-500">${group.lastSeen}</p>
+        </div>
+      `).join('');
+
+      // Add click event listeners to groups
+      document.querySelectorAll('#groupsList div').forEach(group => {
+        group.addEventListener('click', () => {
+          const groupName = group.getAttribute('data-name');
+          openChat(groupName);
+        });
+      });
+    }
+
+    // Function to render people
+    function renderPeople() {
+      const peopleList = document.getElementById('peopleList');
+      peopleList.innerHTML = people.map(person => `
+        <div class="flex justify-between items-center mb-2 cursor-pointer" data-name="${person.name.replace(/\s+/g, '_')}">
+          <div>
+            <p class="font-semibold">${person.name}</p>
+            <p class="text-sm text-gray-500">${person.lastMessage}</p>
+          </div>
+          <p class="text-sm text-gray-500">${person.lastSeen}</p>
+        </div>
+      `).join('');
+
+      // Add click event listeners to people
+      document.querySelectorAll('#peopleList div').forEach(person => {
+        person.addEventListener('click', () => {
+          const personName = person.getAttribute('data-name');
+          openChat(personName);
+        });
+      });
+    }
+
+    // Function to open chat for a specific person or group
+    function openChat(name) {
+      const activeGroupName = document.getElementById('activeGroupName');
+      const activeGroupStatus = document.getElementById('activeGroupStatus');
+      const chatMessagesContainer = document.getElementById('chatMessages');
+
+      // Update the active group name and status
+      activeGroupName.textContent = name.replace(/_/g, ' ');
+      activeGroupStatus.textContent = "Online - Last seen: Just now";
+
+      // Filter and display chat messages for the selected person or group
+      const messages = chatMessagesData[name] || [];
+      chatMessagesContainer.innerHTML = messages.map(msg => `
+        <div class="flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}">
+          <div class="${msg.sender === 'me' ? 'bg-purple-600 text-white' : 'bg-gray-200'} p-2 rounded-lg">
+            <p>${msg.message}</p>
+            <p class="text-xs ${msg.sender === 'me' ? 'text-gray-200' : 'text-gray-500'}">${msg.time}</p>
+          </div>
+        </div>
+      `).join('');
+
+      // Scroll to the bottom of the chat messages container
+      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    }
+
+    // Function to send a new message
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const message = messageInput.value.trim();
+      if (message) {
+        const activeName = document.getElementById('activeGroupName').textContent.replace(/\s+/g, '_');
+        chatMessagesData[activeName].push({ sender: 'me', message, time: new Date().toLocaleTimeString() });
+        messageInput.value = '';
+        openChat(activeName); // Refresh the chat
+      }
+    }
+
+    // Event listeners
+    document.getElementById('sendMessage').addEventListener('click', sendMessage);
+    document.getElementById('messageInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    // Initial render
+    renderGroups();
+    renderPeople();
+    openChat('Projet'); // Open default chat for "Projet"
+  </script>
+</body>
+</html>

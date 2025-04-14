@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Université ISMAI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2c4250;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2196F3;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(81, 174, 218, 0.5), rgba(11, 86, 148, 0.5)), 
+                        url('https://via.placeholder.com/1920x1080') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding-top: 60px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-buttons {
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            margin: 0 1rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        /* Programs Section */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .program-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(98, 217, 247, 0.219);
+            text-align: center;
+        }
+
+        /* History Section */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: #2196F3;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+        }
+
+        /* Contact Section */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background: #5fe3fafb;
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: #2196F3;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 40px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .timeline-date {
+            width: 45%;
+            padding: 10px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #2196F3;
+            border-radius: 50%;
+            top: 20px;
+            left: -6px;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .timeline::after {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+            }
+            
+            .timeline-date,
+            .timeline-content {
+                width: 100%;
+                padding-left: 40px;
+            }
+            
+            .timeline-content::before {
+                left: 4px;
+            }
+        }
+        /* Statistics Section */
+.stats-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.academic-year {
+    color: #2196F3;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.gender-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 30px 0;
+}
+
+.gender-item {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    width: 45%;
+}
+
+.gender-item.male {
+    background-color: #e3f2fd;
+    border: 2px solid #2196F3;
+}
+
+.gender-item.female {
+    background-color: #f3e5f5;
+    border: 2px solid #9c27b0;
+}
+
+.total {
+    text-align: center;
+    font-size: 1.2em;
+    color: #2c3e50;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e8f5e9;
+    border-radius: 8px;
+    border: 2px solid #4caf50;
+}
+
+.number {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 10px 0;
+    display: block;
+}
+
+@media (max-width: 600px) {
+    .gender-stats {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .gender-item {
+        width: 90%;
+        margin-bottom: 20px;
+    }
+}
+.presentation-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    .buildings-section {
+        margin-top: 30px;
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 8px;
+    }
+
+    .building-list {
+        list-style: none;
+        padding-left: 20px;
+    }
+
+    .building-list li {
+        margin-bottom: 20px;
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .building-list li::before {
+        content: "▹";
+        color: #2196F3;
+        position: absolute;
+        left: 0;
+        font-size: 1.2em;
+    }
+
+    .building-title {
+        font-weight: bold;
+        color: #2c3e50;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .social-icons-large {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin: 30px 0;
+    }
+
+    .social-icon {
+        color: #2c3e50;
+        transition: transform 0.3s;
+    }
+
+    .social-icon:hover {
+        transform: translateY(-5px);
+    }
+
+    .content-section {
+        max-width: 600px;
+        margin: 40px auto 0;
+        padding: 20px;
+    }
+
+    .content-section hr {
+        border: 1px solid #ddd;
+        margin: 30px 0;
+    }
+
+    .custom-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .custom-list li {
+        padding: 10px 0;
+        margin: 15px 0;
+        border-bottom: 1px dashed #eee;
+        position: relative;
+        padding-left: 25px;
+    }
+
+    .custom-list li::before {
+        content: "•";
+        color: #2196F3;
+        position: absolute;
+        left: 0;
+        font-size: 1.4em;
+    }
+
+    @media (max-width: 600px) {
+        .social-icons-large {
+            gap: 25px;
+        }
+        
+        .social-icon i {
+            font-size: 2.5em;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">ISMAI</a>
+            <div class="nav-links">
+                <a href="#home">Accueil</a>
+                <a href="#history">Historique</a>
+                <a href="#presentation">Présentation</a>
+                <a href="#stats">Chiffres</a>
+                <a href="#follow">Suivez-nous</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Université ISMAI</h1>
+        </div>
+    </section>
+    <!-- History Section -->
+    <section id="history" class="section">
+        <h2>Notre Histoire</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">06/06/2006</div>
+                <div class="timeline-content">
+                    Création de l'ISMAI
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2006-2012</div>
+                <div class="timeline-content">
+                    Directeur : Mounir Ben Saleh (Maître Assistant)<br>
+                    Secrétaire Général : Fathi Ben Fradj
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2011-2012</div>
+                <div class="timeline-content">
+                    Directeur : Mekki Ayadi (Maître de conférences)<br>
+                    Secrétaire général : Mohamed Saleh Barrak
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2012-2014</div>
+                <div class="timeline-content">
+                    Directeur : Mohamed Lakhdhar Ben Mohamed (Maître Assistant)<br>
+                    Secrétaire général : Mohamed Saleh Barrak
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2014-2017</div>
+                <div class="timeline-content">
+                    Directeur : Abdelaziz Harrabi (Maître de conférences)<br>
+                    Secrétaire général : Mohamed Saleh Barrak<br>
+                    Directeur des études et stages, directeur adjoint : Mohamed Ali Ayachi
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2017-2020</div>
+                <div class="timeline-content">
+                    Directeur : Mohamed Ali Ayachi (Maître Assistant)<br>
+                    Secrétaire général : Mohamed Saleh Barrak<br>
+                    Directeur des études et stages, directeur adjoint : Sahbi Trabelsi
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2020-2024</div>
+                <div class="timeline-content">
+                    Directeur : Mohamed Ali Ayachi (Maître Assistant)<br>
+                    Secrétaire général : Mohamed Saleh Barrak
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2024-2027</div>
+                <div class="timeline-content">
+                    Directeur : Sami Aouaoui (Maître de conférences)<br>
+                    Secrétaire général : Mohamed Saleh Barrak
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- Add this section after the About section -->
+<section id="presentation" class="section">
+    <h1>Présentation</h1>
+    
+    <div class="presentation-content">
+        <div class="text-content">
+            <p>
+                Lancé depuis 2006 en vertu du décret n°1587 daté du 6 juin 2006, 
+                l'Institut Supérieur de Mathématiques Appliquées et d'Informatique de Kairouan 
+                est un établissement public à caractère scientifique. Sa création rentrait 
+                dans le cadre d'une politique de proximité et de meilleure répartition 
+                de la carte universitaire.
+            </p><br>
+
+            <div class="buildings-section">
+                <h3>Bâtiments</h3>
+                <p>
+                    En attendant la construction de ses locaux dans le campus universitaire, 
+                    l'ISMAI est hébergé dans trois locaux différents se trouvant au centre ville 
+                    de Kairouan. Ceci fait en sorte qu'elle soit dans une situation unique en son 
+                    genre : au niveau de la gestion du personnel, gestion des examens, gestion 
+                    des emplois, gestion des déplacements, etc.
+                </p>
+                
+                <ul class="building-list">
+                    <li>
+                        <span class="building-title">Bloc A :</span>
+                        Direction – bureau d'ordre, secrétaire général, service financier 
+                        et informatique – Salles d'enseignement pour les matières
+                    </li>
+                    <li>
+                        <span class="building-title">Bloc B :</span>
+                        Locaux administratifs (scolarité, tirage, bibliothèque), 
+                        4 laboratoires informatiques, 1 Studio audio-visuel, 
+                        7 salles de cours/TD et une grande salle
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+    <section id="stats" class="section">
+        <div class="stats-container">
+            <h1>En chiffres</h1>
+            
+            <div class="academic-year">
+                Durant l'année universitaire 2014/2015
+            </div>
+    
+            <div class="main-stats">
+                <p style="text-align: center; margin-bottom: 25px;">
+                    L'ISMAI comporte <strong>820 étudiants</strong> répartis comme suit :
+                </p>
+    
+                <div class="gender-stats">
+                    <div class="gender-item male">
+                        Masculin
+                        <span class="number">297</span>
+                    </div>
+    
+                    <div class="gender-item female">
+                        Féminin
+                        <span class="number">453</span>
+                    </div>
+                </div>
+    
+                <div class="total">
+                    Total : 750
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="follow" class="section">
+        <h2>Suivez nous</h2>
+        
+        <div class="social-icons-large">
+            <a href="#" class="social-icon">
+                <i class="fab fa-facebook fa-3x"></i>
+            </a>
+            <a href="#" class="social-icon">
+                <i class="fab fa-google fa-3x"></i>
+            </a>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Université ISMAI. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

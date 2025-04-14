@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISMAI en chiffres</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .stats-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2196F3;
+            padding-bottom: 10px;
+        }
+
+        .academic-year {
+            color: #2196F3;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .gender-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+
+        .gender-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            width: 45%;
+        }
+
+        .gender-item.male {
+            background-color: #e3f2fd;
+            border: 2px solid #2196F3;
+        }
+
+        .gender-item.female {
+            background-color: #f3e5f5;
+            border: 2px solid #9c27b0;
+        }
+
+        .total {
+            text-align: center;
+            font-size: 1.2em;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            border: 2px solid #4caf50;
+        }
+
+        .number {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 10px 0;
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .gender-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .gender-item {
+                width: 90%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stats-container">
+        <h1>En chiffres</h1>
+        
+        <div class="academic-year">
+            Durant l'année universitaire 2014/2015
+        </div>
+
+        <div class="main-stats">
+            <p style="text-align: center; margin-bottom: 25px;">
+                L'ISMAI comporte <strong>820 étudiants</strong> répartis comme suit :
+            </p>
+
+            <div class="gender-stats">
+                <div class="gender-item male">
+                    Masculin
+                    <span class="number">297</span>
+                </div>
+
+                <div class="gender-item female">
+                    Féminin
+                    <span class="number">453</span>
+                </div>
+            </div>
+
+            <div class="total">
+                Total : 750
+            </div>
+        </div>
+    </div>
+</body>
+</html>

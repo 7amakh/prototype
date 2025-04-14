@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Absence Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4895ef;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --success-color: #4cc9f0;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f7ff;
+      color: var(--dark-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    h1 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .box {
+      margin-bottom: 25px;
+      transition: var(--transition);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--secondary-color);
+    }
+
+    select, .info-display {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      transition: var(--transition);
+      background-color: white;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 20px;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    .info-display {
+      background-color: #f8f9fa;
+      border: 2px solid #e0e0e0;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+
+    .highlight {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-left: 10px;
+    }
+
+    .warning {
+      background-color: #fff3bf;
+      color: #e67700;
+    }
+
+    .danger {
+      background-color: #ffc9c9;
+      color: #c92a2a;
+    }
+
+    .success {
+      background-color: #d3f9d8;
+      color: #2b8a3e;
+    }
+
+    .loading {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Student Absence Tracker</h1>
+
+    <!-- First Box -->
+    <div class="box">
+      <label for="first-box">Select Class:</label>
+      <select id="first-box">
+        <option value="">-- Select a Class --</option>
+        <option value="1MA">1 MA</option>
+        <option value="1ISI">1 ISI</option>
+        <option value="2ISI">2 ISI</option>
+        <option value="3ISI">3 ISI</option>
+        <option value="1SI">1 SI</option>
+        <option value="2SI">2 SI</option>
+        <option value="3SI">3 SI</option>
+      </select>
+    </div>
+
+    <!-- Second Box -->
+    <div class="box hidden fade-in" id="second-box-container">
+      <label for="second-box">Select Student:</label>
+      <select id="second-box">
+        <option value="">-- Select a Student --</option>
+      </select>
+    </div>
+
+    <!-- Third Box -->
+    <div class="box hidden fade-in" id="third-box-container">
+      <label>Student Absences:</label>
+      <div class="info-display" id="third-box"></div>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      "1MA": {
+        "boudhir amal": 3,
+        "trablsi hela": 5,
+        "meddeb houssem": 2,
+        "khmiri sofian":3,
+        "TLILI HENI":9,
+        "JMAL ANOUAR":4,
+        "HAMMAMI ISLEM":1,
+        "JABNOUNI BILEL":5,
+       "BEN AHMED ТAНA":8,
+        "AOUADI KHAOULA":6,
+        "HEMLI AYOUB":7,
+        "dhahri Saiefeddine":8,
+        "Amri Bilel":5,
+        "GHOZZI ЛHED":3,
+        "Khlifi Rihab":0,
+        "KHELIFI MOHAMED":0,
+        "Balghouthi Khouloud":0,
+        "Chwaya Abdelaziz":0,
+        "GAIECH NARJES":5,
+        "OUTAY GHOFRANE":7,
+       "DERBALI AYOUB":1,
+       "rawen iyed":1,
+       "BACCAR ICHRAK":4,
+      "TLILI MAHDI":2,
+      "ALOUI MOKHTAR":2,
+      "ZENATI MAYEZ":2,
+      "TOUIL NESRINE":2,
+      "BEN HALIMA MARAM":2,
+      "CHIHI ADEM":2,
+      "Ben rhouma Talel":2,
+      "Ben achour Zayneb":2,
+      "BEN ALI MANAR":2,
+      "KHEDER AYOUB":2,
+      "DRIDI MOHAMED":2,
+      "BEN SLIMENE SAHAR":2,
+      "Jennene Iskander":2,
+      "LAAMIRI DOUA":2,
+      "LAAMIMI LINDA":2,
+      "BEN BRAHIM MOHAMED AZiz":2,
+      "SLOUMA HIBA":2,
+      "GUIZANI AROUA":2,
+      "SLEIMI ROUDAYNA":2,
+      "BEN HAMIDA SARRAH":2,
+      "NCIB NESRINE":2,
+      "BEN JEMAA RAHMA":2,
+      "TARHOUNI NOURHENE":2,
+      "BOUSSEMA SALSABIL":2,
+      "HAMMAMI YASMINE":2,
+      "KSOURI MOHAMED AZIZ":2,
+      "AISSA HIBATALLAH":2,
+      "BEN MNA MARAM":2,
+      "REBAI AYA":2,
+      "jlail imen":2,
+      "taghouti hadil":1,
+      "belhaj sghaier zaineb":3,
+      "bensalha wael":9,
+      "meddeb motez":2,
+      "nagati nassim":0,
+      },
+      "1ISI": {
+        "boudhir amal": 3,
+        "trablsi hela": 5,
+        "meddeb houssem": 2,
+        "khmiri sofian":3,
+        "TLILI HENI":9,
+        "JMAL ANOUAR":4,
+        "HAMMAMI ISLEM":1,
+        "JABNOUNI BILEL":5,
+       "BEN AHMED ТAНA":8,
+        "AOUADI KHAOULA":6,
+        "HEMLI AYOUB":7,
+        "dhahri Saiefeddine":8,
+        "Amri Bilel":5,
+        "GHOZZI ЛHED":3,
+        "Khlifi Rihab":0,
+        "KHELIFI MOHAMED":0,
+        "Balghouthi Khouloud":0,
+        "Chwaya Abdelaziz":0,
+        "GAIECH NARJES":5,
+        "OUTAY GHOFRANE":7,
+       "DERBALI AYOUB":1,
+       "rawen iyed":1,
+       "BACCAR ICHRAK":4,
+      "TLILI MAHDI":2,
+      "ALOUI MOKHTAR":2,
+      "ZENATI MAYEZ":2,
+      "TOUIL NESRINE":2,
+      "BEN HALIMA MARAM":2,
+      "CHIHI ADEM":2,
+      "Ben rhouma Talel":2,
+      "Ben achour Zayneb":2,
+      "BEN ALI MANAR":2,
+      "KHEDER AYOUB":2,
+      "DRIDI MOHAMED":2,
+      "BEN SLIMENE SAHAR":2,
+      "Jennene Iskander":2,
+      "LAAMIRI DOUA":2,
+      "LAAMIMI LINDA":2,
+      "BEN BRAHIM MOHAMED AZiz":2,
+      "SLOUMA HIBA":2,
+      "GUIZANI AROUA":2,
+      "SLEIMI ROUDAYNA":2,
+      "BEN HAMIDA SARRAH":2,
+      "NCIB NESRINE":2,
+      "BEN JEMAA RAHMA":2,
+      "TARHOUNI NOURHENE":2,
+      "BOUSSEMA SALSABIL":2,
+      "HAMMAMI YASMINE":2,
+      "KSOURI MOHAMED AZIZ":2,
+      "AISSA HIBATALLAH":2,
+      "BEN MNA MARAM":2,
+      "REBAI AYA":2,
+      "jlail imen":2,
+      "taghouti hadil":1,
+      "belhaj sghaier zaineb":3,
+      "bensalha wael":9,
+      "meddeb motez":2,
+      "nagati nassim":0,
+      },
+      "2ISI": {
+        "boudhir amal": 3,
+        "trablsi hela": 5,
+        "meddeb houssem": 2,
+        "khmiri sofian":3,
+        "TLILI HENI":9,
+        "JMAL ANOUAR":4,
+        "HAMMAMI ISLEM":1,
+        "JABNOUNI BILEL":5,
+       "BEN AHMED ТAНA":8,
+        "AOUADI KHAOULA":6,
+        "HEMLI AYOUB":7,
+        "dhahri Saiefeddine":8,
+        "Amri Bilel":5,
+        "GHOZZI ЛHED":3,
+        "Khlifi Rihab":0,
+        "KHELIFI MOHAMED":0,
+        "Balghouthi Khouloud":0,
+        "Chwaya Abdelaziz":0,
+        "GAIECH NARJES":5,
+        "OUTAY GHOFRANE":7,
+       "DERBALI AYOUB":1,
+       "rawen iyed":1,
+       "BACCAR ICHRAK":4,
+      "TLILI MAHDI":2,
+      "ALOUI MOKHTAR":2,
+      "ZENATI MAYEZ":2,
+      "TOUIL NESRINE":2,
+      "BEN HALIMA MARAM":2,
+      "CHIHI ADEM":2,
+      "Ben rhouma Talel":2,
+      "Ben achour Zayneb":2,
+      "BEN ALI MANAR":2,
+      "KHEDER AYOUB":2,
+      "DRIDI MOHAMED":2,
+      "BEN SLIMENE SAHAR":2,
+      "Jennene Iskander":2,
+      "LAAMIRI DOUA":2,
+      "LAAMIMI LINDA":2,
+      "BEN BRAHIM MOHAMED AZiz":2,
+      "SLOUMA HIBA":2,
+      "GUIZANI AROUA":2,
+      "SLEIMI ROUDAYNA":2,
+      "BEN HAMIDA SARRAH":2,
+      "NCIB NESRINE":2,
+      "BEN JEMAA RAHMA":2,
+      "TARHOUNI NOURHENE":2,
+      "BOUSSEMA SALSABIL":2,
+      "HAMMAMI YASMINE":2,
+      "KSOURI MOHAMED AZIZ":2,
+      "AISSA HIBATALLAH":2,
+      "BEN MNA MARAM":2,
+      "REBAI AYA":2,
+      "jlail imen":2,
+      "taghouti hadil":1,
+      "belhaj sghaier zaineb":3,
+      "bensalha wael":9,
+      "meddeb motez":2,
+      "nagati nassim":0,
+      },
+      "3ISI": {
+        "boudhir amal": 3,
+        "trablsi hela": 5,
+        "meddeb houssem": 2,
+        "khmiri sofian":3,
+        "TLILI HENI":9,
+        "JMAL ANOUAR":4,
+        "HAMMAMI ISLEM":1,
+        "JABNOUNI BILEL":5,
+       "BEN AHMED ТAНA":8,
+        "AOUADI KHAOULA":6,
+        "HEMLI AYOUB":7,
+        "dhahri Saiefeddine":8,
+        "Amri Bilel":5,
+        "GHOZZI ЛHED":3,
+        "Khlifi Rihab":0,
+        "KHELIFI MOHAMED":0,
+        "Balghouthi Khouloud":0,
+        "Chwaya Abdelaziz":0,
+        "GAIECH NARJES":5,
+        "OUTAY GHOFRANE":7,
+       "DERBALI AYOUB":1,
+       "rawen iyed":1,
+       "BACCAR ICHRAK":4,
+      "TLILI MAHDI":2,
+      "ALOUI MOKHTAR":2,
+      "ZENATI MAYEZ":2,
+      "TOUIL NESRINE":2,
+      "BEN HALIMA MARAM":2,
+      "CHIHI ADEM":2,
+      "Ben rhouma Talel":2,
+      "Ben achour Zayneb":2,
+      "BEN ALI MANAR":2,
+      "KHEDER AYOUB":2,
+      "DRIDI MOHAMED":2,
+      "BEN SLIMENE SAHAR":2,
+      "Jennene Iskander":2,
+      "LAAMIRI DOUA":2,
+      "LAAMIMI LINDA":2,
+      "BEN BRAHIM MOHAMED AZiz":2,
+      "SLOUMA HIBA":2,
+      "GUIZANI AROUA":2,
+      "SLEIMI ROUDAYNA":2,
+      "BEN HAMIDA SARRAH":2,
+      "NCIB NESRINE":2,
+      "BEN JEMAA RAHMA":2,
+      "TARHOUNI NOURHENE":2,
+      "BOUSSEMA SALSABIL":2,
+      "HAMMAMI YASMINE":2,
+      "KSOURI MOHAMED AZIZ":2,
+      "AISSA HIBATALLAH":2,
+      "BEN MNA MARAM":2,
+      "REBAI AYA":2,
+      "jlail imen":2,
+      "taghouti hadil":1,
+      "belhaj sghaier zaineb":3,
+      "bensalha wael":9,
+      "meddeb motez":2,
+      "nagati nassim":0,
+      },
+      "1SI": {
+       "boudhir amal": 3,
+        "trablsi hela": 5,
+        "meddeb houssem": 2,
+        "khmiri sofian":3,
+        "TLILI HENI":9,
+        "JMAL ANOUAR":4,
+        "HAMMAMI ISLEM":1,
+        "JABNOUNI BILEL":5,
+       "BEN AHMED ТAНA":8,
+        "AOUADI KHAOULA":6,
+        "HEMLI AYOUB":7,
+        "dhahri Saiefeddine":8,
+        "Amri Bilel":5,
+        "GHOZZI ЛHED":3,
+        "Khlifi Rihab":0,
+        "KHELIFI MOHAMED":0,
+        "Balghouthi Khouloud":0,
+        "Chwaya Abdelaziz":0,
+        "GAIECH NARJES":5,
+        "OUTAY GHOFRANE":7,
+       "DERBALI AYOUB":1,
+       "rawen iyed":1,
+       "BACCAR ICHRAK":4,
+      "TLILI MAHDI":2,
+      "ALOUI MOKHTAR":2,
+      "ZENATI MAYEZ":2,
+      "TOUIL NESRINE":2,
+      "BEN HALIMA MARAM":2,
+      "CHIHI ADEM":2,
+      "Ben rhouma Talel":2,
+      "Ben achour Zayneb":2,
+      "BEN ALI MANAR":2,
+      "KHEDER AYOUB":2,
+      "DRIDI MOHAMED":2,
+      "BEN SLIMENE SAHAR":2,
+      "Jennene Iskander":2,
+      "LAAMIRI DOUA":2,
+      "LAAMIMI LINDA":2,
+      "BEN BRAHIM MOHAMED AZiz":2,
+      "SLOUMA HIBA":2,
+      "GUIZANI AROUA":2,
+      "SLEIMI ROUDAYNA":2,
+      "BEN HAMIDA SARRAH":2,
+      "NCIB NESRINE":2,
+      "BEN JEMAA RAHMA":2,
+      "TARHOUNI NOURHENE":2,
+      "BOUSSEMA SALSABIL":2,
+      "HAMMAMI YASMINE":2,
+      "KSOURI MOHAMED AZIZ":2,
+      "AISSA HIBATALLAH":2,
+      "BEN MNA MARAM":2,
+      "REBAI AYA":2,
+      "jlail imen":2,
+      "taghouti hadil":1,
+      "belhaj sghaier zaineb":3,
+      "bensalha wael":9,
+      "meddeb motez":2,
+      "nagati nassim":0,
+      },
+      "2SI": {
+       "boudhir amal": 3,
+        "trablsi hela": 5,
+        "meddeb houssem": 2,
+        "khmiri sofian":3,
+        "TLILI HENI":9,
+        "JMAL ANOUAR":4,
+        "HAMMAMI ISLEM":1,
+        "JABNOUNI BILEL":5,
+       "BEN AHMED ТAНA":8,
+        "AOUADI KHAOULA":6,
+        "HEMLI AYOUB":7,
+        "dhahri Saiefeddine":8,
+        "Amri Bilel":5,
+        "GHOZZI ЛHED":3,
+        "Khlifi Rihab":0,
+        "KHELIFI MOHAMED":0,
+        "Balghouthi Khouloud":0,
+        "Chwaya Abdelaziz":0,
+        "GAIECH NARJES":5,
+        "OUTAY GHOFRANE":7,
+       "DERBALI AYOUB":1,
+       "rawen iyed":1,
+       "BACCAR ICHRAK":4,
+      "TLILI MAHDI":2,
+      "ALOUI MOKHTAR":2,
+      "ZENATI MAYEZ":2,
+      "TOUIL NESRINE":2,
+      "BEN HALIMA MARAM":2,
+      "CHIHI ADEM":2,
+      "Ben rhouma Talel":2,
+      "Ben achour Zayneb":2,
+      "BEN ALI MANAR":2,
+      "KHEDER AYOUB":2,
+      "DRIDI MOHAMED":2,
+      "BEN SLIMENE SAHAR":2,
+      "Jennene Iskander":2,
+      "LAAMIRI DOUA":2,
+      "LAAMIMI LINDA":2,
+      "BEN BRAHIM MOHAMED AZiz":2,
+      "SLOUMA HIBA":2,
+      "GUIZANI AROUA":2,
+      "SLEIMI ROUDAYNA":2,
+      "BEN HAMIDA SARRAH":2,
+      "NCIB NESRINE":2,
+      "BEN JEMAA RAHMA":2,
+      "TARHOUNI NOURHENE":2,
+      "BOUSSEMA SALSABIL":2,
+      "HAMMAMI YASMINE":2,
+      "KSOURI MOHAMED AZIZ":2,
+      "AISSA HIBATALLAH":2,
+      "BEN MNA MARAM":2,
+      "REBAI AYA":2,
+      "jlail imen":2,
+      "taghouti hadil":1,
+      "belhaj sghaier zaineb":3,
+      "bensalha wael":9,
+      "meddeb motez":2,
+      "nagati nassim":0,
+      },
+      "3SI": {
+        "boudhir amal": 3,
+        "trablsi hela": 5,
+        "meddeb houssem": 2,
+        "khmiri sofian":3,
+        "TLILI HENI":9,
+        "JMAL ANOUAR":4,
+        "HAMMAMI ISLEM":1,
+        "JABNOUNI BILEL":5,
+       "BEN AHMED ТAНA":8,
+        "AOUADI KHAOULA":6,
+        "HEMLI AYOUB":7,
+        "dhahri Saiefeddine":8,
+        "Amri Bilel":5,
+        "GHOZZI ЛHED":3,
+        "Khlifi Rihab":0,
+        "KHELIFI MOHAMED":0,
+        "Balghouthi Khouloud":0,
+        "Chwaya Abdelaziz":0,
+        "GAIECH NARJES":5,
+        "OUTAY GHOFRANE":7,
+       "DERBALI AYOUB":1,
+       "rawen iyed":1,
+       "BACCAR ICHRAK":4,
+      "TLILI MAHDI":2,
+      "ALOUI MOKHTAR":2,
+      "ZENATI MAYEZ":2,
+      "TOUIL NESRINE":2,
+      "BEN HALIMA MARAM":2,
+      "CHIHI ADEM":2,
+      "Ben rhouma Talel":2,
+      "Ben achour Zayneb":2,
+      "BEN ALI MANAR":2,
+      "KHEDER AYOUB":2,
+      "DRIDI MOHAMED":2,
+      "BEN SLIMENE SAHAR":2,
+      "Jennene Iskander":2,
+      "LAAMIRI DOUA":2,
+      "LAAMIMI LINDA":2,
+      "BEN BRAHIM MOHAMED AZiz":2,
+      "SLOUMA HIBA":2,
+      "GUIZANI AROUA":2,
+      "SLEIMI ROUDAYNA":2,
+      "BEN HAMIDA SARRAH":2,
+      "NCIB NESRINE":2,
+      "BEN JEMAA RAHMA":2,
+      "TARHOUNI NOURHENE":2,
+      "BOUSSEMA SALSABIL":2,
+      "HAMMAMI YASMINE":2,
+      "KSOURI MOHAMED AZIZ":2,
+      "AISSA HIBATALLAH":2,
+      "BEN MNA MARAM":2,
+      "REBAI AYA":2,
+      "jlail imen":2,
+      "taghouti hadil":1,
+      "belhaj sghaier zaineb":3,
+      "bensalha wael":9,
+      "meddeb motez":2,
+      "nagati nassim":0,
+      }
+    };
+
+    // Get references to DOM elements
+    const firstBox = document.getElementById("first-box");
+    const secondBoxContainer = document.getElementById("second-box-container");
+    const secondBox = document.getElementById("second-box");
+    const thirdBoxContainer = document.getElementById("third-box-container");
+    const thirdBox = document.getElementById("third-box");
+
+    // Event listener for the first box
+    firstBox.addEventListener("change", function() {
+      const selectedClass = this.value;
+
+      // Clear the second box and hide it initially
+      secondBox.innerHTML = '<option value="">-- Select a Student --</option>';
+      secondBoxContainer.classList.add("hidden");
+
+      // Clear the third box and hide it
+      thirdBox.textContent = "";
+      thirdBoxContainer.classList.add("hidden");
+
+      if (selectedClass && data[selectedClass]) {
+        // Add loading effect
+        secondBoxContainer.classList.remove("hidden");
+        secondBox.classList.add("loading");
+        
+        // Simulate loading delay for better UX
+        setTimeout(() => {
+          // Populate the second box with students from the selected class
+          for (const student in data[selectedClass]) {
+            const option = document.createElement("option");
+            option.value = student;
+            option.textContent = student;
+            secondBox.appendChild(option);
+          }
+          
+          secondBox.classList.remove("loading");
+          secondBoxContainer.classList.add("fade-in");
+          secondBoxContainer.classList.remove("hidden");
+        }, 300);
+      }
+    });
+
+    // Event listener for the second box
+    secondBox.addEventListener("change", function() {
+      const selectedClass = firstBox.value;
+      const selectedStudent = this.value;
+
+      // Clear the third box and hide it initially
+      thirdBox.textContent = "";
+      thirdBoxContainer.classList.add("hidden");
+
+      if (selectedClass && selectedStudent && data[selectedClass][selectedStudent] !== undefined) {
+        // Add loading effect
+        thirdBoxContainer.classList.remove("hidden");
+        thirdBox.classList.add("loading");
+        
+        setTimeout(() => {
+          const absences = data[selectedClass][selectedStudent];
+          let badgeClass = "success";
+          let message = "Excellent attendance";
+          
+          if (absences > 3 && absences <= 5) {
+            badgeClass = "warning";
+            message = "Moderate absences";
+          } else if (absences > 5) {
+            badgeClass = "danger";
+            message = "High absences - needs attention";
+          } else if (absences === 0) {
+            message = "Perfect attendance!";
+          }
+          
+          thirdBox.innerHTML = `
+            <span>${selectedStudent} has <span class="highlight">${absences}</span> absences</span>
+            <span class="badge ${badgeClass}">${message}</span>
+          `;
+          thirdBox.classList.remove("loading");
+          thirdBoxContainer.classList.add("fade-in");
+        }, 300);
+      }
+    });
+  </script>
+</body>
+</html>
